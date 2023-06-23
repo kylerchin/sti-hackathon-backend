@@ -10,7 +10,28 @@ async fn index(req: HttpRequest) -> impl Responder {
         .body("Hello world!")
 }
 
-async fn addpatient(req: HttpRequest) -> impl Responder {
+struct PatientInit {
+    first: String,
+    last: String,
+    region: i32,
+    wealth: i32,
+    age: i32,
+    educational: i32,
+    age_of_first: i32,
+    working_status: i32,
+    marital: i32,
+    internet: i32,
+    alcohol: i32,
+    ethnicity: i32,
+    sti: bool,
+    sex: i32,
+    connections: Option<Vec<i64>>,
+    address: String,
+    dis: Option<i64>,
+    physician: i64,
+}
+
+async fn addpatient(info: web::Json<PatientInit>) -> impl Responder {
     let postgresstring = arguments::parse(std::env::args())
         .unwrap()
         .get::<String>("postgres")
@@ -21,6 +42,8 @@ async fn addpatient(req: HttpRequest) -> impl Responder {
     match client {
         Ok(c) => {
             //insert into database
+
+            println!("{:?}", info);
 
             HttpResponse::Ok()
                 .insert_header(("Server", "Actix"))
@@ -81,7 +104,7 @@ async fn main() -> std::io::Result<()> {
     let builder = HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(index))
-            .route("/addpatient", web::get().to(addpatient))
+            .route("/addpatient", web::post().to(addpatient))
     })
     .workers(8);
 
