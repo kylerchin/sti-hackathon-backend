@@ -10,6 +10,7 @@ async fn index(req: HttpRequest) -> impl Responder {
         .body("Hello world!")
 }
 
+#[derive(serde::Deserialize)]
 struct PatientInit {
     first: String,
     last: String,
