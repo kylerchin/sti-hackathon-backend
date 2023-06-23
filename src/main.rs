@@ -28,7 +28,7 @@ async fn addpatient(req: HttpRequest) -> impl Responder {
                 .insert_header(("Access-Control-Allow-Origin", "*"))
                 .body("Hello world!")
         }
-        Err(e) => HttpRequest::InternalServerError()
+        Err(e) => HttpResponse::InternalServerError()
             .insert_header(("Server", "Actix"))
             .insert_header(("Content-Type", "text/plain"))
             .insert_header(("Access-Control-Allow-Origin", "*"))
@@ -37,13 +37,13 @@ async fn addpatient(req: HttpRequest) -> impl Responder {
 }
 
 #[actix_web::main]
-fn main() -> std::io::Result<()> {
+async fn main() -> std::io::Result<()> {
     let postgresstring = arguments::parse(std::env::args())
         .unwrap()
         .get::<String>("postgres")
         .unwrap();
 
-    let mut client = Client::connect(postgresstring, NoTls).unwrap();
+    let mut client = Client::connect(&postgresstring, NoTls).unwrap();
 
     client
         .batch_execute(
