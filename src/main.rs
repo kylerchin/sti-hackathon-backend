@@ -19,7 +19,7 @@ async fn addpatient(req: HttpRequest) -> impl Responder {
     let mut client = Client::connect(postgresstring, NoTls);
 
     match client {
-        Some(c) => {
+        Ok(c) => {
             //insert into database
 
             HttpResponse::Ok()
@@ -28,7 +28,7 @@ async fn addpatient(req: HttpRequest) -> impl Responder {
                 .insert_header(("Access-Control-Allow-Origin", "*"))
                 .body("Hello world!")
         }
-        None => HttpRequest::InternalServerError()
+        Err(e) => HttpRequest::InternalServerError()
             .insert_header(("Server", "Actix"))
             .insert_header(("Content-Type", "text/plain"))
             .insert_header(("Access-Control-Allow-Origin", "*"))
