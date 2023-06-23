@@ -272,6 +272,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "arguments"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d8b6590432235ca848cccae06397e642a4e984b37c546dc1b0dcb056b9dcd23"
+dependencies = [
+ "options",
+]
+
+[[package]]
 name = "async-trait"
 version = "0.1.68"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -775,6 +784,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd8b5dd2ae5ed71462c540258bedcb51965123ad7e7ccf4b9a8cafaa4a63576d"
 
 [[package]]
+name = "options"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61a1c9b12c453182754f3126c5689324c7214265de2df79917b59de87547a916"
+
+[[package]]
 name = "parking_lot"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1102,6 +1117,7 @@ version = "0.1.0"
 dependencies = [
  "actix",
  "actix-web",
+ "arguments",
  "postgres",
 ]
 
