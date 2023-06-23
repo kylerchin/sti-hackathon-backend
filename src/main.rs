@@ -14,7 +14,7 @@ async fn addpatient(req: HttpRequest) -> impl Responder {
     let postgresstring = arguments::parse(std::env::args())
         .unwrap()
         .get::<String>("postgres")
-        .unwrap() as str;
+        .unwrap();
 
     let mut client = Client::connect(&postgresstring, NoTls);
 
