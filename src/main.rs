@@ -1,6 +1,6 @@
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder};
-
-use postgres::{Client, NoTls};
+use tokio_postgres::{NoTls, Error};
+use tokio;
 
 async fn index(req: HttpRequest) -> impl Responder {
     HttpResponse::Ok()
@@ -38,10 +38,20 @@ async fn addpatient(info: web::Json<PatientInit>) -> impl Responder {
         .get::<String>("postgres")
         .unwrap();
 
-    let mut client = Client::connect(&postgresstring, NoTls);
+    // Connect to the database.
+   /*
+    let (client, connection) =
+        tokio_postgres::connect(&postgresstring, NoTls).await.unwrap();
 
-    match client {
-        Ok(c) => {
+    // The connection object performs the actual communication with the database,
+    // so spawn it off to run on its own.
+    tokio::spawn(async move {
+        if let Err(e) = connection.await {
+            eprintln!("connection error: {}", e);
+        }
+    });
+     */
+
             //insert into database
 
             println!("{:?}", info);
@@ -51,13 +61,7 @@ async fn addpatient(info: web::Json<PatientInit>) -> impl Responder {
                 .insert_header(("Content-Type", "text/plain"))
                 .insert_header(("Access-Control-Allow-Origin", "*"))
                 .body("Hello world!")
-        }
-        Err(e) => HttpResponse::InternalServerError()
-            .insert_header(("Server", "Actix"))
-            .insert_header(("Content-Type", "text/plain"))
-            .insert_header(("Access-Control-Allow-Origin", "*"))
-            .body("Postgres string not correct!"),
-    }
+       
 }
 
 #[actix_web::main]
@@ -67,7 +71,17 @@ async fn main() -> std::io::Result<()> {
         .get::<String>("postgres")
         .unwrap();
 
-    let mut client = Client::connect(&postgresstring, NoTls).unwrap();
+    // Connect to the database.
+    let (client, connection) =
+        tokio_postgres::connect(&postgresstring, NoTls).await.unwrap();
+
+    // The connection object performs the actual communication with the database,
+    // so spawn it off to run on its own.
+    tokio::spawn(async move {
+        if let Err(e) = connection.await {
+            eprintln!("connection error: {}", e);
+        }
+    });
 
     client
         .batch_execute(
@@ -98,8 +112,7 @@ async fn main() -> std::io::Result<()> {
                 physician bigint
               )
             ",
-        )
-        .unwrap();
+        ).await.unwrap();
 
     // Create a new HTTP server.
     let builder = HttpServer::new(|| {
