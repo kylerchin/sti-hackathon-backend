@@ -39,7 +39,7 @@ async fn addpatient(info: web::Json<PatientInit>) -> impl Responder {
         .unwrap();
 
     // Connect to the database.
-   /*
+   
     let (client, connection) =
         tokio_postgres::connect(&postgresstring, NoTls).await.unwrap();
 
@@ -50,7 +50,7 @@ async fn addpatient(info: web::Json<PatientInit>) -> impl Responder {
             eprintln!("connection error: {}", e);
         }
     });
-     */
+     
 
             //insert into database
 
@@ -122,8 +122,8 @@ async fn main() -> std::io::Result<()> {
     })
     .workers(8);
 
-    // Bind the server to port 8080.
-    let _ = builder.bind("127.0.0.1:8080").unwrap().run().await;
+    // Bind the server to port 15981.
+    let _ = builder.bind("127.0.0.1:15981").unwrap().run().await;
 
     Ok(())
 }
